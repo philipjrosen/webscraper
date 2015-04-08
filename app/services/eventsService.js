@@ -5,14 +5,18 @@ angular.module('app.eventsService', [])
 
   events.getEvents = function (url) {
 
-    $http.get(url)
+    var deferred = $q.defer();
 
-    .success(function (data, status) {
-      console.log(data);
-    })
-    .error(function (error, status) {
-      console.log("error", status);
-    });
+    $http.get(url)
+      .success(function (data, status) {
+        deferred.resolve(data);
+      })
+      .error(function (error, status) {
+        console.log("error", status);
+        deferred.reject();
+      });
+
+    return deferred.promise;
   };
 
   return events;
