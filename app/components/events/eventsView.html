@@ -1,7 +1,10 @@
-<ul class="row">
-  <li ng-repeat="event in events">
-    <p><strong>{{event.description}}</strong></p>
-    <p>{{event.time}}</p>
-    <p>{{event.locaton}}</p>
-  </li>
-</ul>
+<div class="panel">
+  <a ui-sref=".list" class="btn btn-default btn-lg">
+    <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
+  </a>
+  <a ui-sref=".grid" class="btn btn-default btn-lg">
+    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+  </a>
+</div>
+
+<div ui-view></div>
