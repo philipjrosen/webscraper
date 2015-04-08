@@ -29,8 +29,7 @@ app.get('/events', function (req, res) {
         location: eventLocation
       };
     }).get();
-
-    console.log(events);
+    res.send(events);
   });
 });
 
