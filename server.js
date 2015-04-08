@@ -17,9 +17,17 @@ app.get('/events', function (req, res) {
     var $ = cheerio.load(html);
 
     var $events = $('.postcard-text');
-
+    var $contents;
+    var eventLocation;
     var events = $events.map(function (idx, item) {
-      return { description: $(this).find('h3').text() };
+      //get all the children of 'p' in order to get the location(a text node)
+      $contents = $(this).find('p').contents();
+      eventLocation = $contents[$contents.length -1].nodeValue
+      return {
+        description: $(this).find('h3').text(),
+        time: $(this).find('strong').text(),
+        location: eventLocation
+      };
     }).get();
 
     console.log(events);
