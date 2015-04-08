@@ -1,34 +1,79 @@
 var express = require('express');
 var request = require('request');
 var cheerio = require('cheerio');
-
+var u       = require('underscore');
 var app = express();
 
 app.use(express.static(__dirname + ''));
 
+// app.get('/events', function (req, res) {
+
+//   var url = 'http://events.stanford.edu/2014/October/1/';
+
+//   request(url, function (error, response, html) {
+//     if (error) {
+//       console.log("error:", error);
+//     }
+//     var $ = cheerio.load(html);
+
+//     var $events = $('.postcard-text');
+//     var $contents;
+//     var eventLocation;
+//     var events = $events.map(function (idx, item) {
+//       //get all the children of 'p' in order to get the location(a text node)
+//       $contents = $(this).find('p').contents();
+//       eventLocation = $contents[$contents.length -1].nodeValue
+//       return {
+//         description: $(this).find('h3').text(),
+//         time: $(this).find('strong').text(),
+//         location: eventLocation
+//       };
+//     }).get();
+//     res.send(events);
+//   });
+// });
+
 app.get('/events', function (req, res) {
+  var options = {
+    url:'https://www.eventbrite.com/',
+    headers: {
+    'User-Agent': 'request'
+    }
+  };
 
-  var url = 'http://events.stanford.edu/2014/October/1/';
-
-  request(url, function (error, response, html) {
+  request(options, function (error, response, html) {
     if (error) {
       console.log("error:", error);
     }
     var $ = cheerio.load(html);
 
-    var $events = $('.postcard-text');
+    var $descriptons = $('.event-poster__title');
+    var descriptions = $descriptons.map(function (idx, item) {
+      return { description: $(this).text()};
+    }).get();
+
+    var $locations = $('[itemprop="location"]');
     var $contents;
     var eventLocation;
-    var events = $events.map(function (idx, item) {
-      //get all the children of 'p' in order to get the location(a text node)
-      $contents = $(this).find('p').contents();
+    var locations = $locations.map(function (idx, item) {
+      $contents = $(this).contents();
       eventLocation = $contents[$contents.length -1].nodeValue
-      return {
-        description: $(this).find('h3').text(),
-        time: $(this).find('strong').text(),
-        location: eventLocation
-      };
+      return { location: eventLocation};
     }).get();
+
+    var $dates = $('.event-poster__date');
+    var day, time;
+    var dates = $dates.map(function (idx, item) {
+      time = $(this).first().children().first().text();
+      day = $(this).first().children().eq(1).text();
+      return { time: time + " " + day };
+    }).get();
+
+    var events = [];
+
+    for (var i = 0; i <= locations.length; i++) {
+      events.push(u.extend(locations[i], descriptions[i], dates[i]));
+    };
     res.send(events);
   });
 });
