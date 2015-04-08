@@ -6,7 +6,8 @@ angular.module('app')
   $stateProvider
     .state('events', {
       url: '/events',
-      templateUrl: 'app/components/events/eventsView.html'
+      templateUrl: 'app/components/events/eventsView.html',
+      controller: 'EventsCtrl'
     })
 
     $stateProvider

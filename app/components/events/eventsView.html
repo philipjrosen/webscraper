@@ -1,10 +1,18 @@
 <div class="panel">
-  <a ui-sref=".list" class="btn btn-default btn-lg">
-    <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
-  </a>
-  <a ui-sref=".grid" class="btn btn-default btn-lg">
-    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
-  </a>
+  <form class="form-inline" ng-submit="getUrl()">
+    <a ui-sref=".list" class="btn btn-default btn-lg">
+      <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
+    </a>
+    <a ui-sref=".grid" class="btn btn-default btn-lg">
+      <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+    </a>
+
+    <div class="form-group url-form">
+      <label>URL:</label>
+      <input ng-model="url" type="text" class="form-control" placeholder="Enter the url for an events site">
+    </div>
+    <button type="submit" class="btn btn-default">Get Events</button>
+  </form>
 </div>
 
 <div ui-view></div>
