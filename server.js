@@ -1,4 +1,7 @@
 var express = require('express');
+var request = require('request');
+var cheerio = require('cheerio');
+
 var app = express();
 
 app.use(express.static(__dirname + ''));

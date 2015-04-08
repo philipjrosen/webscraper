@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/philipjrosen/webscraper",
   "dependencies": {
-    "express": "^4.12.3"
+    "cheerio": "^0.19.0",
+    "express": "^4.12.3",
+    "request": "^2.55.0"
   }
 }
