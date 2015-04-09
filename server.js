@@ -6,13 +6,11 @@ var app = express();
 
 app.use(express.static(__dirname + ''));
 
-var scrapers = {
-  stanford: stanfordScraper
-};
-
 app.get('/events', function (req, res) {
+var eventUrl = req.query.eventUrl;
+
   var options = {
-    url: req.query.eventUrl,
+    url: eventUrl,
     headers: {
     'User-Agent': 'request'
     }
@@ -23,59 +21,17 @@ app.get('/events', function (req, res) {
       console.log("error:", error);
     }
     var $ = cheerio.load(html);
-    var events = scrapers.stanford($);
+    var events = scrapers.eventbrite($);
+    // var events = scrapers.stanford($);
 
     res.send(events);
   });
 });
 
-
-// app.get('/events', function (req, res) {
-// var eventUrl = req.query.eventUrl;
-
-//   var options = {
-//     url: eventUrl,
-//     headers: {
-//     'User-Agent': 'request'
-//     }
-//   };
-
-//   request(options, function (error, response, html) {
-//     if (error) {
-//       console.log("error:", error);
-//     }
-//     var $ = cheerio.load(html);
-
-//     var $descriptons = $('.event-poster__title');
-//     var descriptions = $descriptons.map(function (idx, item) {
-//       return { description: $(this).text()};
-//     }).get();
-
-//     var $locations = $('[itemprop="location"]');
-//     var $contents;
-//     var eventLocation;
-//     var locations = $locations.map(function (idx, item) {
-//       $contents = $(this).contents();
-//       eventLocation = $contents[$contents.length -1].nodeValue
-//       return { location: eventLocation};
-//     }).get();
-
-//     var $dates = $('.event-poster__date');
-//     var day, time;
-//     var dates = $dates.map(function (idx, item) {
-//       time = $(this).first().children().first().text();
-//       day = $(this).first().children().eq(1).text();
-//       return { time: time + " " + day };
-//     }).get();
-
-//     var events = [];
-
-//     for (var i = 0; i <= locations.length; i++) {
-//       events.push(u.extend(locations[i], descriptions[i], dates[i]));
-//     };
-//     res.send(events);
-//   });
-// });
+var scrapers = {
+  stanford: stanfordScraper,
+  eventbrite: eventbriteScraper
+};
 
 function stanfordScraper($) {
   var $events = $('.postcard-text');
@@ -91,6 +47,37 @@ function stanfordScraper($) {
       location: eventLocation
     };
   }).get();
+};
+
+function eventbriteScraper($) {
+  var $descriptons = $('.event-poster__title');
+  var descriptions = $descriptons.map(function (idx, item) {
+    return { description: $(this).text()};
+  }).get();
+
+  var $locations = $('[itemprop="location"]');
+  var $contents;
+  var eventLocation;
+  var locations = $locations.map(function (idx, item) {
+    $contents = $(this).contents();
+    eventLocation = $contents[$contents.length -1].nodeValue
+    return { location: eventLocation};
+  }).get();
+
+  var $dates = $('.event-poster__date');
+  var day, time;
+  var dates = $dates.map(function (idx, item) {
+    time = $(this).first().children().first().text();
+    day = $(this).first().children().eq(1).text();
+    return { time: time + " " + day };
+  }).get();
+
+  var events = [];
+
+  for (var i = 0; i <= locations.length; i++) {
+    events.push(u.extend(locations[i], descriptions[i], dates[i]));
+  };
+  return events;
 };
 
 var port = '3000';
