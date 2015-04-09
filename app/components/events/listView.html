@@ -1,7 +1,9 @@
-<ul class="row list-unstyled">
-  <li ng-repeat="event in events">
-    <p><strong>{{event.description}}</strong></p>
-    <p>{{event.time}}</p>
-    <p>{{event.locaton}}</p>
-  </li>
-</ul>
+<div class="row">
+  <div class="col-md-8">
+    <div class="panel" ng-repeat="event in events">
+      <p><strong>{{event.description}}</strong></p>
+      <p>{{event.time}}</p>
+      <p>{{event.locaton}}</p>
+    </div>
+  </div>
+</div>
