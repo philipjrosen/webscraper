@@ -2,15 +2,16 @@ angular.module('app.events', [])
 
 .controller('EventsCtrl', ['$scope','eventsFactory', function ($scope, eventsFactory) {
 
-  $scope.url;
 
-  eventsFactory.getEvents('/events')
-  .then(function (events) {
-    $scope.events = events;
-  });
+  $scope.getEventsFromUrl = function(url) {
+    eventsFactory.getEvents(url)
+    .then(function (events) {
+      $scope.events = events;
+    });
+  };
 
   $scope.getUrl = function () {
-    console.log($scope.url);
+    $scope.getEventsFromUrl($scope.url);
     $scope.url = "";
   };
 }]);

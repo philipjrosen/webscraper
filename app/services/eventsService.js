@@ -3,11 +3,10 @@ angular.module('app.eventsService', [])
 .factory('eventsFactory', ['$http', '$q', function ($http, $q) {
   var events = {};
 
-  events.getEvents = function (url) {
-
+  events.getEvents = function (eventUrl) {
     var deferred = $q.defer();
 
-    $http.get(url)
+    $http({method: "GET", url: '/events', params: {eventUrl: eventUrl}})
       .success(function (data, status) {
         deferred.resolve(data);
       })

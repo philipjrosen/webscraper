@@ -7,10 +7,14 @@ var app = express();
 app.use(express.static(__dirname + ''));
 
 // app.get('/events', function (req, res) {
+//   var options = {
+//     url: req.query.eventUrl,
+//     headers: {
+//     'User-Agent': 'request'
+//     }
+//   };
 
-//   var url = 'http://events.stanford.edu/2014/October/1/';
-
-//   request(url, function (error, response, html) {
+//   request(options, function (error, response, html) {
 //     if (error) {
 //       console.log("error:", error);
 //     }
@@ -34,8 +38,10 @@ app.use(express.static(__dirname + ''));
 // });
 
 app.get('/events', function (req, res) {
+var eventUrl = req.query.eventUrl;
+
   var options = {
-    url:'https://www.eventbrite.com/',
+    url: eventUrl,
     headers: {
     'User-Agent': 'request'
     }
