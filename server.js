@@ -21,16 +21,17 @@ var eventUrl = req.query.eventUrl;
       console.log("error:", error);
     }
     var $ = cheerio.load(html);
-    var events = scrapers.eventbrite($);
+    // var events = scrapers.eventbrite($);
     // var events = scrapers.stanford($);
-
+    var events = scrapers.sfmoma($);
     res.send(events);
   });
 });
 
 var scrapers = {
   stanford: stanfordScraper,
-  eventbrite: eventbriteScraper
+  eventbrite: eventbriteScraper,
+  sfmoma: sfmomaScraper
 };
 
 function stanfordScraper($) {
@@ -46,6 +47,21 @@ function stanfordScraper($) {
       time: $(this).find('strong').text(),
       location: eventLocation
     };
+  }).get();
+};
+
+function sfmomaScraper($) {
+  var $events = $('.bd');
+  var $contents;
+  var eventLocation;
+  return $events.map(function (idx, item) {
+      return {
+        description: $(this).find('.title.benton').text(),
+        time: $(this).find('span.date').text(),
+        location: 'SFMOMA'
+    }
+  }).filter(function (idx, item){
+    return item.description && item.time;
   }).get();
 };
 
