@@ -21,9 +21,16 @@ var eventUrl = req.query.eventUrl;
       console.log("error:", error);
     }
     var $ = cheerio.load(html);
-    // var events = scrapers.eventbrite($);
-    // var events = scrapers.stanford($);
-    var events = scrapers.sfmoma($);
+    var events;
+    if (eventUrl === 'https://www.eventbrite.com/') {
+      events = scrapers.eventbrite($);
+    } else if (eventUrl ==='http://events.stanford.edu/') {
+      events = scrapers.stanford($);
+    } else if (eventUrl === 'http://www.sfmoma.org/') {
+      events = scrapers.sfmoma($);
+    } else {
+      events = [{description: "Could not get events for this site"}];
+    }
     res.send(events);
   });
 });
